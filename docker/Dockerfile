@@ -3,10 +3,12 @@ FROM zeit/wait-for:0.2 as wait
 # Build dependencies
 FROM composer:latest as vendor
 
-COPY composer.json composer.json
-COPY composer.lock composer.lock
+COPY src/composer.json composer.json
+COPY src/composer.lock composer.lock
 
-RUN composer install --ignore-platform-reqs --no-interaction --no-plugins --no-scripts --prefer-dist --no-dev
+RUN composer install --ignore-platform-reqs \
+    --no-interaction --no-plugins --no-scripts \
+    --prefer-dist --no-dev
 
 FROM alpine:3.8
 
@@ -42,31 +44,17 @@ RUN apk add --no-cache \
     imagemagick \
     php7-imagick
 
-COPY nginx.conf /etc/nginx/nginx.conf
-COPY www.conf /etc/php7/php-fpm.d/
+COPY docker/nginx/nginx.conf /etc/nginx/nginx.conf
+COPY docker/php/www.conf /etc/php7/php-fpm.d/
 
 # Copy over Craft files
-COPY config/ /www/config
-COPY modules/ /www/modules
-COPY storage/ /www/storage
-COPY templates/ /www/templates
-COPY storage/ /www/storage
-COPY web/ /www/web
-COPY .env /www/.env
-COPY composer.json /www/composer.json
-COPY composer.lock /www/composer.lock
+COPY src/ /www/
 
 # Copy over vendor files
 COPY --from=vendor /app/vendor /www/vendor
 
 # Set permissions
-RUN chmod 777 -R /www/config
-RUN chmod 777 -R /www/vendor
-RUN chmod 777 -R /www/storage
-RUN chmod 777 -R /www/web/cpresources
-RUN chmod 777 /www/.env
-RUN chmod 777 /www/composer.json
-RUN chmod 777 /www/composer.lock
+RUN chmod 777 -R /www/*
 
 # Expose default port
 EXPOSE 80
