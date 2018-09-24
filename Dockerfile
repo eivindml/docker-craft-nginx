@@ -44,8 +44,8 @@ RUN apk add --no-cache \
     imagemagick \
     php7-imagick
 
-COPY docker/nginx/nginx.conf /etc/nginx/nginx.conf
-COPY docker/php/www.conf /etc/php7/php-fpm.d/
+COPY docker/nginx.conf /etc/nginx/
+COPY docker/www.conf /etc/php7/php-fpm.d/
 
 # Copy over Craft files
 COPY src/ /www/
@@ -54,7 +54,7 @@ COPY src/ /www/
 COPY --from=vendor /app/vendor /www/vendor
 
 # Set permissions
-RUN chmod 777 -R /www/*
+RUN chmod 744 -R /www/*
 
 # Expose default port
 EXPOSE 80
