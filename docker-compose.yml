@@ -2,15 +2,19 @@ version: '3'
 
 services:
   craft:
-    build: .
+    container_name: docker-craft
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    ports:
     volumes:
-      - ./web/:/var/www/html/
-      - ./templates/:/var/www/templates/
-      - ./config/:/var/www/config/
-      - ./storage/:/var/www/storage/
-      - ./translations/:/var/www/translations/
-      - ./composer.json:/var/www/composer.json
-      - ./composer.lock:/var/www/composer.lock
+      - ./src/web/:/var/www/html/
+      - ./src/templates/:/var/www/templates/
+      - ./src/config/:/var/www/config/
+      - ./src/storage/:/var/www/storage/
+      - ./src/translations/:/var/www/translations/
+      - ./src/composer.json:/var/www/composer.json
+      - ./src/composer.lock:/var/www/composer.lock
     ports:
       - 80:80
     restart: always
