@@ -1,5 +1,3 @@
-# Docker Craft Nginx
-
 ![](readme-banner.png)
 
 <p align="center">
