@@ -37,7 +37,10 @@ RUN apk add --no-cache \
 # Optional extensions for Craft
     php7-iconv \
     php7-intl \
-    php7-dom
+    php7-dom \
+# Extra Optional extensions for Craft
+    imagemagick \
+    php7-imagick
 
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY www.conf /etc/php7/php-fpm.d/
