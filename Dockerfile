@@ -15,6 +15,12 @@ FROM alpine:3.8
 LABEL maintainer="Eivind Mikael Lindbråten <eivindml@icloud.com>"
 LABEL description="Minimal Craft CMS Container using nginx."
 
+# Copy over Craft files
+COPY src/ /www/
+
+# Copy over vendor files
+COPY --from=vendor /app/vendor /www/vendor
+
 # install nginx, php, and php extensions for Craft
 RUN apk add --no-cache \
     bash \
@@ -44,17 +50,11 @@ RUN apk add --no-cache \
     imagemagick \
     php7-imagick
 
+COPY docker/php.ini /etc/php7/
 COPY docker/nginx.conf /etc/nginx/
 COPY docker/www.conf /etc/php7/php-fpm.d/
 
-# Copy over Craft files
-COPY src/ /www/
-
-# Copy over vendor files
-COPY --from=vendor /app/vendor /www/vendor
-
-# Set permissions
-RUN chmod 744 -R /www/*
+RUN chmod 777 -R /www/*
 
 # Expose default port
 EXPOSE 80
